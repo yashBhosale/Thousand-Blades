@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour {
-    public Controller2D target;
+    private Controller2D target;
     public Vector2 focusAreaSize;
+    public Controller2D[] targetList;
 
     public float verticalOffset;
     public float lookAheadDstX;
@@ -22,6 +23,12 @@ public class CameraFollow : MonoBehaviour {
 
     private void Start()
     {
+        targetList =  FindObjectsOfType<Controller2D>();
+        foreach (Controller2D potentialTarget in targetList)
+        {
+            if (potentialTarget.gameObject.tag == "Player")
+                target = potentialTarget;
+        }
         focusArea = new FocusArea(target.collider.bounds, focusAreaSize);
     }
     private void LateUpdate()
