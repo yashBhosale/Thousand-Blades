@@ -28,14 +28,14 @@ public class Player : MonoBehaviour
     Vector2 directionalInput;
     bool wallSliding;
     int wallDirX;
-	Animator anim; //Ref to animator controller
+	//Animator anim; //Ref to animator controller
 
     internal Controller2D controller;
 
     void Start()
     {
         controller = GetComponent<Controller2D>();
-		anim = GetComponent<Animator> (); //Get the animator component stored on the player
+		//anim = GetComponent<Animator> (); //Get the animator component stored on the player
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timetoJumpApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timetoJumpApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-		anim.SetTrigger ("Down"); //Not sure if this should be first line
+		//anim.SetTrigger ("Down"); //Not sure if this should be first line
 
 		CalculateVelocity();
         HandleWallSliding();
