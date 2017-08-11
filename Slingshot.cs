@@ -6,10 +6,7 @@ using UnityEngine;
 public class Slingshot: MonoBehaviour
 {
     private Collider2D hero;
-    // set in the inspector
-    public Material slingShotMaterial;
-    // set in the inspector
-    public Material originMaterial;
+  
     private Renderer rend;
 
     public void Update()
@@ -24,7 +21,7 @@ public class Slingshot: MonoBehaviour
         {
             hero = other;
             rend = GetComponent<Renderer>();
-            rend.material = slingShotMaterial;
+            rend.material.color = Color.blue;
         }
     }
 
@@ -32,7 +29,7 @@ public class Slingshot: MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            rend.material = originMaterial;
+            rend.material.color = Color.white;
             hero = null;
         }
     }
