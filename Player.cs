@@ -29,11 +29,16 @@ public class Player : MonoBehaviour
     bool wallSliding;
     int wallDirX;
 
+    private Animator anim;
+    private SpriteRenderer sprite;
+
     internal Controller2D controller;
 
     void Start()
     {
         controller = GetComponent<Controller2D>();
+        anim = GetComponent<Animator>();
+        sprite = GetComponent<SpriteRenderer>();
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timetoJumpApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timetoJumpApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
@@ -44,8 +49,15 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        anim.SetTrigger("Down");
         CalculateVelocity();
         HandleWallSliding();
+        if (Mathf.Sign(velocity.x) >= 0)
+            sprite.flipX = true;
+        else
+            sprite.flipX = false;
+        
+        
 
         controller.Move(velocity * Time.deltaTime, directionalInput);
 
