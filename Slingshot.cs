@@ -6,6 +6,11 @@ using UnityEngine;
 public class Slingshot: MonoBehaviour
 {
     private Collider2D hero;
+    // set in the inspector
+    public Material slingShotMaterial;
+    // set in the inspector
+    public Material originMaterial;
+    private Renderer rend;
 
     public void Update()
     {
@@ -15,13 +20,20 @@ public class Slingshot: MonoBehaviour
     }
     public void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player")
+        {
             hero = other;
+            rend = GetComponent<Renderer>();
+            rend.material = slingShotMaterial;
+        }
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if(other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player")
+        {
+            rend.material = originMaterial;
             hero = null;
+        }
     }
 }
