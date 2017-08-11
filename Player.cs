@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     public float timeToWallUnstick;
     float gravity;
     Vector3 velocity;
-    float moveSpeed = 6;
+    float moveSpeed = 10;
     float velocityXSmoothing;
     float accelerationTimeAirborne = .2f;
     float accelerationTimeGrounded = .1f;
