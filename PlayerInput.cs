@@ -20,13 +20,6 @@ public class PlayerInput : MonoBehaviour {
 
         if (Input.GetKeyUp(KeyCode.Space))
             player.OnJumpInputUp();
-
-        if(Input.GetButtonDown("Special")){
-            float dist = player.controller.SlingshotDetect();
-                if(player.controller.inRange)
-                    player.slingShot(dist);
-        }
-
  
         }
     }
