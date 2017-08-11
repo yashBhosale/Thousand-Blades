@@ -15,6 +15,6 @@ public class PlayerDeath : MonoBehaviour
     void Die()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        Debug.Log("Player has Died");
+        Debug.Log("Matt is lame");
     }
 }
