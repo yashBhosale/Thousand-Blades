@@ -15,27 +15,25 @@ public class Player : MonoBehaviour
     public Vector2 wallLeap;
     public float wallStickTime = .25f;
     public float timeToWallUnstick;
-
     float gravity;
     Vector3 velocity;
     float moveSpeed = 6;
     float velocityXSmoothing;
     float accelerationTimeAirborne = .2f;
     float accelerationTimeGrounded = .1f;
+    public float slingshotMultiplier;
 
     float maxJumpVelocity;
     float minJumpVelocity;
     Vector2 directionalInput;
     bool wallSliding;
     int wallDirX;
-	Animator anim; //Ref to animator controller
 
     internal Controller2D controller;
 
     void Start()
     {
         controller = GetComponent<Controller2D>();
-		anim = GetComponent<Animator> (); //Get the animator component stored on the player
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timetoJumpApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timetoJumpApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
@@ -46,9 +44,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-		anim.SetTrigger ("Down"); //Not sure if this should be first line
-
-		CalculateVelocity();
+        CalculateVelocity();
         HandleWallSliding();
 
         controller.Move(velocity * Time.deltaTime, directionalInput);
@@ -88,9 +84,9 @@ public class Player : MonoBehaviour
         }
         if (controller.collisions.below)
         {
-            if(controller.collisions.slidingDownMaxSlope)
+            if (controller.collisions.slidingDownMaxSlope)
             {
-                if(directionalInput.x != -Mathf.Sign(controller.collisions.slopeNormal.x))
+                if (directionalInput.x != -Mathf.Sign(controller.collisions.slopeNormal.x))
                 {
                     velocity.y = maxJumpVelocity * controller.collisions.slopeNormal.y;
                     velocity.x = maxJumpVelocity * controller.collisions.slopeNormal.x;
@@ -108,15 +104,14 @@ public class Player : MonoBehaviour
         }
     }
 
-public void slingShot(float dist){
-        Vector2 temp =  transform.position;
-        temp = controller.slingShot - temp;
+    public void slingShot(Vector2 slingshot)
+    {
+        Vector2 temp = transform.position;
+        temp = slingshot - temp;
         temp.Normalize();
-        Debug.Log(dist);
 
-        velocity = 50 * temp;
+        velocity = slingshotMultiplier * temp;
 
-       // print(velocity);
 
     }
 
@@ -160,4 +155,4 @@ public void slingShot(float dist){
             }
         }
     }
-}   
+}
