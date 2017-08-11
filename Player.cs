@@ -15,7 +15,6 @@ public class Player : MonoBehaviour
     public Vector2 wallLeap;
     public float wallStickTime = .25f;
     public float timeToWallUnstick;
-
     float gravity;
     Vector3 velocity;
     float moveSpeed = 6;
@@ -28,14 +27,12 @@ public class Player : MonoBehaviour
     Vector2 directionalInput;
     bool wallSliding;
     int wallDirX;
-	//Animator anim; //Ref to animator controller
 
     internal Controller2D controller;
 
     void Start()
     {
         controller = GetComponent<Controller2D>();
-		//anim = GetComponent<Animator> (); //Get the animator component stored on the player
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timetoJumpApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timetoJumpApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
@@ -46,9 +43,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-		//anim.SetTrigger ("Down"); //Not sure if this should be first line
-
-		CalculateVelocity();
+        CalculateVelocity();
         HandleWallSliding();
 
         controller.Move(velocity * Time.deltaTime, directionalInput);
@@ -108,15 +103,13 @@ public class Player : MonoBehaviour
         }
     }
 
-public void slingShot(float dist){
+public void slingShot(Vector2 slingshot){
         Vector2 temp =  transform.position;
-        temp = controller.slingShot - temp;
+        temp = slingshot - temp;
         temp.Normalize();
-        Debug.Log(dist);
 
         velocity = 50 * temp;
 
-       // print(velocity);
 
     }
 
