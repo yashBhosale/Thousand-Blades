@@ -5,7 +5,6 @@ using UnityEngine;
 public class Controller2D : RaycastController {
     
     public LayerMask collisionMask;
-    public LayerMask slingshotMask;
 
   public  float maxSlopeAngle = 80;
     [HideInInspector]
@@ -23,71 +22,7 @@ public class Controller2D : RaycastController {
         collisions.faceDir = 1;
     }
 
-    internal float SlingshotDetect(){
-        
-        float rayLength = 10;
-        int directionX = -1, directionY = -1;
-        Vector2 closest = new Vector2(20000,20000);
-        float closestDistance = 20000;
-        
-        Vector2 rayOrigin = transform.position;
-        
-    do
-    {
-        directionX  *= -1;
-        for(int i = 0; i < horizontalRayCount; i++){
-            
-
-            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, slingshotMask);
-
-            Debug.DrawRay(rayOrigin, Vector2.right, Color.blue);
- 
-            if(hit){
-            //   print(hit.distance);
-                if(hit.distance == 0)
-                    continue;
-                if(hit.distance < closestDistance){
-                //    Debug.Log(hit.distance);
-                    closest = hit.collider.transform.position;
-                    closestDistance = hit.distance;
-                }
-            }
-            
-        }
-    } while (directionX == 1);
     
-    do
-    {
-        directionY  *= -1;
-        for(int i = 0; i < verticalRayCount; i++){
-            
-       
-            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, slingshotMask);
-
-            Debug.DrawRay(rayOrigin, Vector2.right, Color.green);
-
-            if(hit){
-         //     Debug.Log(hit.distance);
-                if(hit.distance == 0)
-                    continue;
-                if(hit.distance < closestDistance){
-                    closest = hit.collider.transform.position;
-                    closestDistance = hit.distance;
-                }
-            }
-        }
-    } while (directionY == 1);
-    
-    if(closestDistance != 20000){
-     //   Debug.Log(closestDistance);
-        inRange = true;
-        slingShot = closest;
-        return closestDistance;
-    }
-    inRange = false;
-    return 0;
-    
-    }
 
 
 
