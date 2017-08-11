@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent (typeof(Rigidbody2D))]
 [RequireComponent(typeof(Controller2D))]
 public class enemy : MonoBehaviour
 {
@@ -22,21 +23,31 @@ public class enemy : MonoBehaviour
     float accelerationTimeAirborne = .2f;
     float accelerationTimeGrounded = .1f;
     public float slingshotMultiplier;
+    public float attackDamage = 15;
+    private float timeToAttack = 0.5f;
 
     float maxJumpVelocity;
     float minJumpVelocity;
     Vector2 directionalInput;
     bool wallSliding;
     int wallDirX;
+    private Rigidbody2D thisRb;
+    private BoxCollider2D thisCollider;
 
-    internal Controller2D controller;
+    public GameObject body;
+    private Controller2D controller;
 
     void Start()
     {
-        controller = GetComponent<Controller2D>();
+        //you need to add this script to a gameobject that is childed to whatever enemy
+        controller = transform.parent.gameObject.GetComponent<Controller2D>();
+        thisRb = GetComponent<Rigidbody2D>();
+        thisCollider = GetComponent<BoxCollider2D>();
+        thisCollider.isTrigger = true;
+        thisCollider.size = new Vector2(25, 25);
+        thisRb.isKinematic = true;
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timetoJumpApex, 2);
-        maxJumpVelocity = Mathf.Abs(gravity) * timetoJumpApex;
-        minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
+
         print("Gravity:" + gravity + "  Jump Velocity:" + maxJumpVelocity);
 
     }
@@ -45,7 +56,10 @@ public class enemy : MonoBehaviour
     void Update()
     {
         CalculateVelocity();
-       
+        if(timeToAttack >= 0)
+        {
+            timeToAttack -= Time.deltaTime *2;
+        }
 
         controller.Move(velocity * Time.deltaTime, directionalInput);
 
@@ -58,39 +72,51 @@ public class enemy : MonoBehaviour
         }
     }
 
-public void SetDirectionalInput(Vector2 input)
+    public void SetDirectionalInput(Vector2 input)
     {
         directionalInput = input;
     }
-    
+
     void OnTriggerEnter2D(Collider2D other)
     {
-		if(other.gameObject.tag == "Player"){
-        Vector2 input = new Vector2(other.transform.position.x - transform.position.x, 0);
-        input.Normalize();
-        directionalInput = input;
-		}
-	}
+        if (other.gameObject.tag == "Player")
+        {
+            Vector2 input = new Vector2(other.transform.position.x - transform.position.x, 0);
+            input.Normalize();
+            directionalInput = input;
+
+        }
+    }
     void OnTriggerStay2D(Collider2D other)
     {
-		if(other.gameObject.tag == "Player"){
-        Vector2 input = new Vector2(other.transform.position.x - transform.position.x, 0);
-        
-		if(Mathf.Abs(input.x) > 4){
-			input.Normalize();
-        	directionalInput = input;
-		}
-		else
-			directionalInput = Vector2.zero;
-		}
-	}
+
+        if (other.gameObject.tag == "Player")
+        {
+            Vector2 input = new Vector2(other.transform.position.x - transform.position.x, 0);
+
+            if (Mathf.Abs(input.x) > 2)
+            {
+                input.Normalize();
+                directionalInput = input;
+            }
+            else
+                directionalInput = Vector2.zero;
+
+            if (other.transform.position.x - transform.position.x <= 2 && timeToAttack <= 0)
+            {
+                Debug.Log("Enemy attacks player");
+                timeToAttack = 2;
+                other.gameObject.GetComponent<PlayerHealth>().decrementHealth(attackDamage);
+            }
+        }
+    }
 
 
 
-	void OnTriggerExit2D(Collider2D other)
-	{
-		SetDirectionalInput(Vector2.zero);
-	}
+    void OnTriggerExit2D(Collider2D other)
+    {
+        SetDirectionalInput(Vector2.zero);
+    }
 
 
 
