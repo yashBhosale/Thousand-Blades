@@ -24,7 +24,7 @@ public class enemy : MonoBehaviour
     float accelerationTimeGrounded = .1f;
     public float slingshotMultiplier;
     public float attackDamage = 15;
-    private float timeToAttack = 0.5f;
+    private float timeToAttack = 4;
 
     float maxJumpVelocity;
     float minJumpVelocity;
@@ -56,10 +56,7 @@ public class enemy : MonoBehaviour
     void Update()
     {
         CalculateVelocity();
-        if(timeToAttack >= 0)
-        {
-            timeToAttack -= Time.deltaTime *2;
-        }
+      
 
         controller.Move(velocity * Time.deltaTime, directionalInput);
 
@@ -89,12 +86,15 @@ public class enemy : MonoBehaviour
     }
     void OnTriggerStay2D(Collider2D other)
     {
-
+        if (timeToAttack >= 0)
+        {
+            timeToAttack -= Time.deltaTime;
+        }
         if (other.gameObject.tag == "Player")
         {
             Vector2 input = new Vector2(other.transform.position.x - transform.position.x, 0);
 
-            if (Mathf.Abs(input.x) > 2)
+            if (Mathf.Abs(input.x) > 0.5f)
             {
                 input.Normalize();
                 directionalInput = input;
@@ -102,10 +102,10 @@ public class enemy : MonoBehaviour
             else
                 directionalInput = Vector2.zero;
 
-            if (other.transform.position.x - transform.position.x <= 2 && timeToAttack <= 0)
+            if (other.transform.position.x - transform.position.x <= 0.5f && timeToAttack <= 0)
             {
                 Debug.Log("Enemy attacks player");
-                timeToAttack = 2;
+                timeToAttack = 4;
                 other.gameObject.GetComponent<PlayerHealth>().decrementHealth(attackDamage);
             }
         }
