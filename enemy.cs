@@ -56,8 +56,9 @@ public class enemy : MonoBehaviour
     void Update()
     {
         CalculateVelocity();
-      
 
+        if (transform.position.y < -8)
+            enemyDeath();
         controller.Move(velocity * Time.deltaTime, directionalInput);
 
         if (controller.collisions.above || controller.collisions.below)
@@ -109,6 +110,11 @@ public class enemy : MonoBehaviour
                 other.gameObject.GetComponent<PlayerHealth>().decrementHealth(attackDamage);
             }
         }
+    }
+
+    void enemyDeath()
+    {
+        Destroy(transform.parent.gameObject);
     }
 
 
